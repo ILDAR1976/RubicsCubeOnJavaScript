@@ -26,6 +26,7 @@ var rad;
 var oldInd = {
 	ind: 0,
 	faceInd: 0,
+	g: 0,
 	x: 0,
 	y: 0,
 	z: 0
@@ -34,6 +35,7 @@ var oldInd = {
 var bufInd = {
 	ind: 0,
 	faceInd: 0,
+	g: 0,
 	x: 0,
 	y: 0,
 	z: 0
@@ -42,6 +44,7 @@ var bufInd = {
 var curInd = {
 	ind: 0,
 	faceInd: 0,
+	g: 0,
 	x: 0,
 	y: 0,
 	z: 0
@@ -53,15 +56,13 @@ var oldRot = {
 	z: 1
 }
 
-var rotate = false;
-
-
-
 var rotateDelta = {
 	x: 0,
 	y: 0,
 	z: 0
 }
+
+var rotate = false;
 
 var lesson10 = {
   scene: null, camera: null, renderer: null, 
@@ -139,17 +140,8 @@ var lesson10 = {
     var object, material, radius;
 	
 	this.group = new THREE.Group();
-    this.group1 = new THREE.Group();
-	this.group2 = new THREE.Group();
-	this.group3 = new THREE.Group();
-	
-	this.group4 = new THREE.Group();
-	this.group5 = new THREE.Group();
-	this.group6 = new THREE.Group();
-	
+   	
 	this.scene.add(this.group);
-	//this.scene.add(this.group2);
-	//this.scene.add(this.group3);
 	
 {
 var g1 = new THREE.BoxGeometry(1, 1, 1, 1, 1, 1);
@@ -616,11 +608,9 @@ var m27 = new THREE.MeshBasicMaterial( {color: 0xffffff, vertexColors: THREE.Fac
       object.position.z = cube.get(i)[2];
 	  
 	  object.className = "" + i;
-	 
-	  //if (!flag) {
-		this.scene.add(object);
-		this.objects.push(object);
-	 // }
+	  
+	  this.scene.add(object);
+	  this.objects.push(object);
 	  
 	  flag = false;
     }
@@ -671,34 +661,55 @@ var m27 = new THREE.MeshBasicMaterial( {color: 0xffffff, vertexColors: THREE.Fac
 		lesson10.controls.enabled = false;
 		
 		var object = intersects[0].object;
+		let vector = new THREE.Vector3();
+		object.getWorldPosition(vector);
 		
 		if (filter(object.className,intersects[0].faceIndex)) {
 			curInd.ind = object.className;
 			curInd.faceInd = getFaceIndex(intersects[0].faceIndex);
+			curInd.g = getType(curInd.ind);
+			
+			curInd.x = Math.round(vector.x);
+			curInd.y = Math.round(vector.y);
+			curInd.z = Math.round(vector.z);
 
 			oldInd.ind = bufInd.ind;
 			oldInd.faceInd = bufInd.faceInd;
-
-		}	
+			oldInd.g = bufInd.g;
+			
+			oldInd.x = bufInd.x;
+			oldInd.y = bufInd.y;
+			oldInd.z = bufInd.z;
 		
-		if (filter(object.className,intersects[0].faceIndex)) {
+			
 			if (bufInd.ind != curInd.ind) {
-				console.clear();
-				console.log(curInd.ind + " " + curInd.faceInd + " " + oldInd.ind + " " + oldInd.faceInd );
-				setDirect(oldInd.ind, oldInd.faceInd, curInd.ind, curInd.faceInd)
-				bufInd.ind = object.className;
-				bufInd.faceInd = getFaceIndex(intersects[0].faceIndex);
-			} else {
-				if (bufInd.faceInd != curInd.faceInd) {
-					console.clear();
-					console.log(curInd.ind + " " + curInd.faceInd + " " + oldInd.ind + " " + oldInd.faceInd );
-					setDirect(oldInd.ind, oldInd.faceInd, curInd.ind, curInd.faceInd)
-					bufInd.ind = object.className;
-					bufInd.faceInd = getFaceIndex(intersects[0].faceIndex);
-				}
-			}
+				bufInd.x = Math.round(vector.x);
+				bufInd.y = Math.round(vector.y);
+				bufInd.z = Math.round(vector.z);
+			
+				
 
-			console.log(oldRot.y);
+				console.clear();
+				console.log(" cur: " + curInd.ind + " " + curInd.faceInd + " old: " + oldInd.ind + " " + oldInd.faceInd + " \r type: " + curInd.g + " " + oldInd.g );
+				console.log(" cur coord: " + curInd.x + " " + curInd.y + " " + curInd.z );
+				console.log(" old coord: " + oldInd.x + " " + oldInd.y + " " + oldInd.z );
+				console.log(" rotators: " + rotateDelta.x + " " + rotateDelta.y + " " + rotateDelta.z );
+				
+				
+				let vec = new THREE.Vector3();
+				lesson10.group.getWorldPosition(vec);
+				
+				console.log(" group pos: " + lesson10.group.position.x + " " + lesson10.group.position.y + " " + lesson10.group.position.z );
+				console.log(" group pos: " + vec.x + " " + vec.y + " " + vec.z );
+				
+				console.log(" group rot: " + lesson10.group.rotation.x + " " + lesson10.group.rotation.y + " " + lesson10.group.rotation.z );
+				setDirect2(curInd,oldInd);
+				
+				bufInd.ind = object.className;
+				
+				bufInd.faceInd = getFaceIndex(intersects[0].faceIndex);
+				bufInd.g = getType(bufInd.ind);
+			} 
 		}	
 
     } else {
@@ -750,10 +761,6 @@ function update() {
 
   lesson10.controls.update(delta);
   lesson10.stats.update();
-  
-  //lesson10.group4.rotation.x += 0.01;
-  //lesson10.group5.rotation.x -= 0.01;
-  //lesson10.group6.rotation.x -= 0.04;
 }
 
 // Render the scene
@@ -911,6 +918,104 @@ function getFaceIndex(i) {
 	}
 }	
 
+
+function setDirect2(c,o){
+	if (!rotate) {
+		if (c.x == 1 && o.x == 1 ) {
+					
+			if ((c.g == 1 && o.g == 2 ) || c.g == 2 && o.g == 1) {
+				if (c.y - o.y < 0 && c.z == 0 && o.z == 0)	{
+					setGroup(3,-0.01,0);
+				}  else 
+				if (c.z - o.z > 0 && c.y == 0 && o.y == 0)	{
+					setGroup(2,-0.01,0);
+				} 
+				if (c.y - o.y > 0 && c.z == 0 && o.z == 0)	{
+					setGroup(3,0.01,0);
+				}  else 
+				if (c.z - o.z < 0 && c.y == 0 && o.y == 0)	{
+					setGroup(2,0.01,0);
+				} 
+			}
+
+			if ((c.g == 2 && o.g == 3 ) || c.g == 3 && o.g == 2) {
+				if (c.y - o.y < 0 && c.z == 1 && o.z == 1)	{
+					setGroup(3,-0.01,1);
+				}  else 
+				if (c.z - o.z > 0 && c.y == 1 && o.y == 1)	{
+					setGroup(2,-0.01,1);
+				} 
+				if (c.y - o.y > 0 && c.z == 1 && o.z == 1)	{
+					setGroup(3,0.01,1);
+				}  else 
+				if (c.z - o.z < 0 && c.y == 1 && o.y == 1)	{
+					setGroup(2,0.01,1);
+				} 
+
+				if (c.y - o.y < 0 && c.z == -1 && o.z == -1)	{
+					setGroup(3,-0.01,-1);
+				}  else 
+				if (c.z - o.z > 0 && c.y == -1 && o.y == -1)	{
+					setGroup(2,-0.01,-1);
+				} 
+				if (c.y - o.y > 0 && c.z == -1 && o.z == -1)	{
+					setGroup(3,0.01,-1);
+				}  else 
+				if (c.z - o.z < 0 && c.y == -1 && o.y == -1)	{
+					setGroup(2,0.01,-1);
+				} 
+			}
+		}
+/*
+		if (c.z == 1 && o.z == 1) {
+					
+			if ((c.g == 1 && o.g == 2 ) || c.g == 2 && o.g == 1) {
+				if (c.y - o.y < 0 && c.z == 0 && o.z == 0)	{
+					setGroup(3,-0.01,0);
+				}  else 
+				if (c.z - o.z > 0 && c.y == 0 && o.y == 0)	{
+					setGroup(2,-0.01,0);
+				} 
+				if (c.y - o.y > 0 && c.z == 0 && o.z == 0)	{
+					setGroup(3,0.01,0);
+				}  else 
+				if (c.z - o.z < 0 && c.y == 0 && o.y == 0)	{
+					setGroup(2,0.01,0);
+				} 
+			}
+
+			if ((c.g == 2 && o.g == 3 ) || c.g == 3 && o.g == 2) {
+				if (c.y - o.y < 0 && c.z == 1 && o.z == 1)	{
+					setGroup(3,-0.01,1);
+				}  else 
+				if (c.z - o.z > 0 && c.y == 1 && o.y == 1)	{
+					setGroup(2,-0.01,1);
+				} 
+				if (c.y - o.y > 0 && c.z == 1 && o.z == 1)	{
+					setGroup(3,0.01,1);
+				}  else 
+				if (c.z - o.z < 0 && c.y == 1 && o.y == 1)	{
+					setGroup(2,0.01,1);
+				} 
+
+				if (c.y - o.y < 0 && c.z == -1 && o.z == -1)	{
+					setGroup(3,-0.01,-1);
+				}  else 
+				if (c.z - o.z > 0 && c.y == -1 && o.y == -1)	{
+					setGroup(2,-0.01,-1);
+				} 
+				if (c.y - o.y > 0 && c.z == -1 && o.z == -1)	{
+					setGroup(3,0.01,-1);
+				}  else 
+				if (c.z - o.z < 0 && c.y == -1 && o.y == -1)	{
+					setGroup(2,0.01,-1);
+				} 
+			}
+		}
+	*/
+	}
+}
+
 function setDirect(oi, ofi, ci, cfi) {
 
 	// layer one
@@ -1010,13 +1115,17 @@ function setGroup(selector, delta, position) {
 	
 	for (let objIndex in lesson10.objects) {
 		let obj = lesson10.objects[objIndex];
+		
+		rotateDelta.x = 0;
+		rotateDelta.y = 0;
+		rotateDelta.z = 0;
+		
 		switch (selector) {
 			case 1:
 				rotateDelta.x = delta;
 				if (obj.position.x == position) {
 					lesson10.group.attach(obj);
 					lesson10.group.add(obj);
-					
 				}
 			break;
 			case 2:
@@ -1024,7 +1133,6 @@ function setGroup(selector, delta, position) {
 				if (obj.position.y == position) {
 					lesson10.group.attach(obj);
 					lesson10.group.add(obj);
-					
 				}
 			break;
 			case 3:
@@ -1032,7 +1140,6 @@ function setGroup(selector, delta, position) {
 				if (obj.position.z == position) {
 					lesson10.group.attach(obj);
 					lesson10.group.add(obj);
-					
 				}
 			break;
 		}
@@ -1042,14 +1149,79 @@ function setGroup(selector, delta, position) {
 }	
 
 function rotator() {
-let rx = lesson10.group.rotation.x;
-  let ry = lesson10.group.rotation.y;
+  let rx = lesson10.group.rotation.x;
+  let ry = lesson10.group.rotation.y; 
   let rz = lesson10.group.rotation.z;
-  
+
   if (rotate) {
+	
 	lesson10.group.rotation.x += rotateDelta.x;
 	lesson10.group.rotation.y += rotateDelta.y;
 	lesson10.group.rotation.z += rotateDelta.z;
+	
+  }
+ 
+  
+  if ((Math.trunc(rx * 100) == -1 * 157) /*&& !(Math.trunc(rx * 100) == oldRot.xx)*/) {
+			
+	if (Math.trunc(rx * 100) == -1 * 157)	lesson10.group.rotation.x = -1 * 1.57;  
+	oldRot.x = Math.trunc(lesson10.group.rotation.x * 100);
+	rotate = false;
+  }
+  
+  if ((Math.trunc(rx * 100) == 1 * 157) /*&& !(Math.trunc(rx * 100) == oldRot.x)*/) {
+			
+	if (Math.trunc(rx * 100) == 1 * 157)	lesson10.group.rotation.x = 1 * 1.57;  
+	oldRot.x = Math.trunc(lesson10.group.rotation.x * 100);	
+	rotate = false;
+  }
+
+if ((Math.trunc(ry * 100) == -1 * 157) /*&& !(Math.trunc(ry * 100) == oldRot.y)*/) {
+			
+	if (Math.trunc(ry * 100) == -1 * 157)	lesson10.group.rotation.y = -1 * 1.57;  
+	oldRot.y = Math.trunc(lesson10.group.rotation.y * 100);
+	rotate = false;
+  }
+  
+  if ((Math.trunc(ry * 100) == 1 * 157) /*&& !(Math.trunc(ry * 100) == oldRot.y)*/) {
+			
+	if (Math.trunc(ry * 100) == 1 * 157) lesson10.group.rotation.y = 1 * 1.57;  
+	oldRot.y = Math.trunc(lesson10.group.rotation.y * 100);	
+	rotate = false;
+  }
+
+if ((Math.trunc(rz * 100) == -1 * 157) /*&& !(Math.trunc(rz * 100) == oldRot.z)*/) {
+			
+	if (Math.trunc(rz * 100) == -1 * 157) lesson10.group.rotation.z = -1 * 1.57;  
+	oldRot.z = Math.trunc(lesson10.group.rotation.z * 100);
+	rotate = false;
+  }
+  
+  if ((Math.trunc(rz * 100) == 1 * 157) /*&& !(Math.trunc(rz * 100) == oldRot.z)*/) {
+			
+	if (Math.trunc(rz * 100) == 1 * 157) lesson10.group.rotation.z = 1 * 1.57;  
+	oldRot.z = Math.trunc(lesson10.group.rotation.z * 100);	
+	rotate = false;
+  }
+
+ 
+}
+
+function rotator2() {
+  let rx = lesson10.group.rotation.x;
+  let ry = lesson10.group.rotation.y; 
+  let rz = lesson10.group.rotation.z;
+
+  if (rotate) {
+	
+	lesson10.group.rotation.x += rotateDelta.x;
+	lesson10.group.rotation.y += rotateDelta.y;
+	lesson10.group.rotation.z += rotateDelta.z;
+	/*
+	oldRot.x = 0;
+	oldRot.y = 0;
+	oldRot.z = 0;
+	*/
   }
  
   
@@ -1082,8 +1254,6 @@ let rx = lesson10.group.rotation.x;
   if (rx < - 4 * 1.57) lesson10.group.rotation.x = 0;
   if (rx >  4 * 1.57) lesson10.group.rotation.x = 0;
 
-
-
  
   if (((Math.trunc(ry * 100) == 0) ||
 	   (Math.trunc(ry * 100) == -1 * 157) || 
@@ -1097,7 +1267,6 @@ let rx = lesson10.group.rotation.x;
 	oldRot.y = Math.trunc(lesson10.group.rotation.y * 100);
 	rotate = false;
   }
-  
   if (((Math.trunc(ry * 100) == 0) ||
 	   (Math.trunc(ry * 100) == 1 * 157) || 
 	   (Math.trunc(ry * 100) == 2 * 157) || 
@@ -1113,8 +1282,6 @@ let rx = lesson10.group.rotation.x;
 
   if (ry < - 4 * 1.57) lesson10.group.rotation.y = 0;
   if (ry >  4 * 1.57) lesson10.group.rotation.y = 0;
-
-
  
   if (((Math.trunc(rz * 100) == 0) ||
 	   (Math.trunc(rz * 100) == -1 * 157) || 
@@ -1144,12 +1311,16 @@ let rx = lesson10.group.rotation.x;
 
   if (rz < - 4 * 1.57) lesson10.group.rotation.z = 0;
   if (rz >  4 * 1.57) lesson10.group.rotation.z = 0;
-  
-
 }
 
 function ungroup() {
-		if (lesson10.group.children.length == 0) return;
+		if (lesson10.group.children.length == 0) {
+			lesson10.group.rotation.x = 0;
+			lesson10.group.rotation.y = 0;
+			lesson10.group.rotation.z = 0;
+			return;
+		}
+		
         for (var i = 8; i > -1; i--) {
      
             var gg = lesson10.group.children[i]; 
@@ -1163,10 +1334,9 @@ function ungroup() {
             lesson10.group.remove(gg);
             lesson10.scene.attach(gg);
             
-            gg.position.x = vector.x;
-            gg.position.y = vector.y;
-            gg.position.z = vector.z;
-
+            gg.position.x = Math.round(vector.x);
+            gg.position.y = Math.round(vector.y);
+            gg.position.z = Math.round(vector.z);
 
             let rotation = new THREE.Euler()
             rotation.setFromQuaternion(quat)
@@ -1176,8 +1346,36 @@ function ungroup() {
             gg.rotation.z = rotation.z ;
 			gg = null;
         };
+		
+		/*
+		lesson10.group.x = 0;
+		lesson10.group.y = 0;
+		lesson10.group.z = 0;
+		*/
+		
+		if (lesson10.group.children.length == 0) {
+			lesson10.group.rotation.x = 0;
+			lesson10.group.rotation.y = 0;
+			lesson10.group.rotation.z = 0;
+			return;
+		}
+		
 }
 
+function getType(inp) {
+	
+	let s = ['5','11','13','15','17','23'];
+	
+	if (s.indexOf(inp)  != -1) {
+		return 1;
+	}
+	
+	if (inp % 2 == 0) {
+		return 2;
+	}
+	
+	return 3;
+}
 
 if (window.addEventListener)
   window.addEventListener('load', initializeLesson, false);
