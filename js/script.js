@@ -649,7 +649,18 @@ var m27 = new THREE.MeshBasicMaterial( {color: 0xffffff, vertexColors: THREE.Fac
 
     if (intersects.length > 0) {
 		lesson10.controls.enabled = false;
-    }
+    } else {
+		curInd.ind = 0;
+		curInd.faceInd = 0;
+		curInd.x = 0;
+		curInd.y = 0;
+		curInd.z = 0;
+		oldInd.ind = 0;
+		oldInd.faceInd = 0;
+		oldInd.x = 0;
+		oldInd.y = 0;
+		oldInd.z = 0;
+	}
 
   },
   onDocumentMouseMove: function (event) {
@@ -718,6 +729,20 @@ var m27 = new THREE.MeshBasicMaterial( {color: 0xffffff, vertexColors: THREE.Fac
     } else {
 		curInd.ind = 0;
 		curInd.faceInd = 0;
+		curInd.x = 0;
+		curInd.y = 0;
+		curInd.z = 0;
+		oldInd.ind = 0;
+		oldInd.faceInd = 0;
+		oldInd.x = 0;
+		oldInd.y = 0;
+		oldInd.z = 0;
+		bufInd.ind = 0;
+		bufInd.faceInd = 0;
+		bufInd.x = 0;
+		bufInd.y = 0;
+		bufInd.z = 0;
+
 	}
 	
   },
@@ -728,6 +753,17 @@ var m27 = new THREE.MeshBasicMaterial( {color: 0xffffff, vertexColors: THREE.Fac
     // Enable the controls
     lesson10.controls.enabled = true;
     lesson10.selection = null;
+	
+	curInd.ind = 0;
+	curInd.faceInd = 0;
+	curInd.x = 0;
+	curInd.y = 0;
+	curInd.z = 0;
+	oldInd.ind = 0;
+	oldInd.faceInd = 0;
+	oldInd.x = 0;
+	oldInd.y = 0;
+	oldInd.z = 0;
 	
   },
   onHoveron: function ()  {
@@ -744,6 +780,17 @@ var m27 = new THREE.MeshBasicMaterial( {color: 0xffffff, vertexColors: THREE.Fac
 	if ( intersections.length > 0 ) {
 		
 		var object = intersections[0].object;
+	} else {
+		curInd.ind = 0;
+		curInd.faceInd = 0;
+		curInd.x = 0;
+		curInd.y = 0;
+		curInd.z = 0;
+		oldInd.ind = 0;
+		oldInd.faceInd = 0;
+		oldInd.x = 0;
+		oldInd.y = 0;
+		oldInd.z = 0;
 	}
  } 
 };
@@ -1219,8 +1266,6 @@ function checkSixthPlane(c,o) {
 		}
 	}
 }
- 
- 
  
 function setGroup(selector, delta, position) {
 	
