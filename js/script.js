@@ -86,7 +86,7 @@ var lesson10 = {
     var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 1, FAR = 1000;
     this.camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
     this.scene.add(this.camera);
-    this.camera.position.set(100, 0, 0);
+    this.camera.position.set(100, 45, 90);
     this.camera.lookAt(new THREE.Vector3(0,0,0));
 
     // Prepare webgl renderer
@@ -618,11 +618,6 @@ var m27 = new THREE.MeshBasicMaterial( {color: 0xffffff, vertexColors: THREE.Fac
 	  
 	  flag = false;
     }
-
-
-	this.dragControls = new THREE.DragControls(this.objects, this.camera, this.renderer.domElement);			
-    this.dragControls.addEventListener( 'hoveron', this.onHoveron, false );
-	this.dragControls.transformGroup = true;
   },
   
   addSkybox: function() {
@@ -661,7 +656,6 @@ var m27 = new THREE.MeshBasicMaterial( {color: 0xffffff, vertexColors: THREE.Fac
 		oldInd.y = 0;
 		oldInd.z = 0;
 	}
-
   },
   onDocumentMouseMove: function (event) {
     event.preventDefault();
@@ -766,33 +760,7 @@ var m27 = new THREE.MeshBasicMaterial( {color: 0xffffff, vertexColors: THREE.Fac
 	oldInd.z = 0;
 	
   },
-  onHoveron: function ()  {
-	
-	var draggableObjects = lesson10.dragControls.getObjects();
-	
-	mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-	mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-	
-	lesson10.raycaster.setFromCamera( mouse, lesson10.camera );
-
-	var intersections = lesson10.raycaster.intersectObjects( lesson10.objects, true );
-	
-	if ( intersections.length > 0 ) {
-		
-		var object = intersections[0].object;
-	} else {
-		curInd.ind = 0;
-		curInd.faceInd = 0;
-		curInd.x = 0;
-		curInd.y = 0;
-		curInd.z = 0;
-		oldInd.ind = 0;
-		oldInd.faceInd = 0;
-		oldInd.x = 0;
-		oldInd.y = 0;
-		oldInd.z = 0;
-	}
- } 
+  
 };
 
 // Animate the scene
