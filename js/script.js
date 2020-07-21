@@ -93,7 +93,6 @@ var lesson10 = {
     this.renderer = new THREE.WebGLRenderer({ antialias:true });
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     this.renderer.setClearColor(this.scene.fog.color);
-
     // Prepare container
     this.container = document.createElement('div');
     document.body.appendChild(this.container);
