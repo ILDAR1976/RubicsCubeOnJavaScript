@@ -936,299 +936,300 @@ function getFaceIndex(i) {
 }	
 
 function setDirect(c,o){
+	let delta = 0.1;
 	if (!rotate) {
-		checkFirstPlane(c,o);
-		checkSecondPlane(c,o);
-		checkThirdPlane(c,o);
-		checkFourthPlane(c,o);
-		checkFivethPlane(c,o);
-		checkSixthPlane(c,o);
+		checkFirstPlane(c,o,delta);
+		checkSecondPlane(c,o,delta);
+		checkThirdPlane(c,o,delta);
+		checkFourthPlane(c,o,delta);
+		checkFivethPlane(c,o,delta);
+		checkSixthPlane(c,o,delta);
 	}
 }
 
-function checkFirstPlane(c,o) {
+function checkFirstPlane(c,o,delta) {
 	if (c.x == 1 && o.x == 1 && c.normal.x == 1 ) {
 				
 		if ((c.g == 1 && o.g == 2 ) || c.g == 2 && o.g == 1) {
 			if (c.y - o.y < 0 && c.z == 0 && o.z == 0)	{
-				setGroup(3,-0.01,0);
+				setGroup(3,-delta,0);
 			}  else 
 			if (c.z - o.z > 0 && c.y == 0 && o.y == 0)	{
-				setGroup(2,-0.01,0);
+				setGroup(2,-delta,0);
 			} 
 			if (c.y - o.y > 0 && c.z == 0 && o.z == 0)	{
-				setGroup(3,0.01,0);
+				setGroup(3,delta,0);
 			}  else 
 			if (c.z - o.z < 0 && c.y == 0 && o.y == 0)	{
-				setGroup(2,0.01,0);
+				setGroup(2,delta,0);
 			} 
 		}
 
 		if ((c.g == 2 && o.g == 3 ) || c.g == 3 && o.g == 2) {
 			if (c.y - o.y < 0 && c.z == 1 && o.z == 1)	{
-				setGroup(3,-0.01,1);
+				setGroup(3,-delta,1);
 			}  else 
 			if (c.z - o.z > 0 && c.y == 1 && o.y == 1)	{
-				setGroup(2,-0.01,1);
+				setGroup(2,-delta,1);
 			} 
 			if (c.y - o.y > 0 && c.z == 1 && o.z == 1)	{
-				setGroup(3,0.01,1);
+				setGroup(3,delta,1);
 			}  else 
 			if (c.z - o.z < 0 && c.y == 1 && o.y == 1)	{
-				setGroup(2,0.01,1);
+				setGroup(2,delta,1);
 			} 
 
 			if (c.y - o.y < 0 && c.z == -1 && o.z == -1)	{
-				setGroup(3,-0.01,-1);
+				setGroup(3,-delta,-1);
 			}  else 
 			if (c.z - o.z > 0 && c.y == -1 && o.y == -1)	{
-				setGroup(2,-0.01,-1);
+				setGroup(2,-delta,-1);
 			} 
 			if (c.y - o.y > 0 && c.z == -1 && o.z == -1)	{
-				setGroup(3,0.01,-1);
+				setGroup(3,delta,-1);
 			}  else 
 			if (c.z - o.z < 0 && c.y == -1 && o.y == -1)	{
-				setGroup(2,0.01,-1);
+				setGroup(2,delta,-1);
 			} 
 		}
 	}
 }
 
-function checkSecondPlane(c,o) {
+function checkSecondPlane(c,o,delta) {
 	if (c.z == 1 && o.z == 1 && c.normal.z == 1 ) {
 				
 		if ((c.g == 1 && o.g == 2 ) || c.g == 2 && o.g == 1) {
 			if (c.y - o.y < 0 && c.x == 0 && o.x == 0)	{
-				setGroup(1,0.01,0);
+				setGroup(1,delta,0);
 			}  else 
 			if (c.x - o.x > 0 && c.y == 0 && o.y == 0)	{
-				setGroup(2,0.01,0);
+				setGroup(2,delta,0);
 			} 
 			if (c.y - o.y > 0 && c.x == 0 && o.x == 0)	{
-				setGroup(1,-0.01,0);
+				setGroup(1,-delta,0);
 			}  else 
 			if (c.x - o.x < 0 && c.y == 0 && o.y == 0)	{
-				setGroup(2,-0.01,0);
+				setGroup(2,-delta,0);
 			} 
 		}
 
 		if ((c.g == 2 && o.g == 3 ) || c.g == 3 && o.g == 2) {
 			if (c.y - o.y < 0 && c.x == 1 && o.x == 1)	{
-				setGroup(1,0.01,1);
+				setGroup(1,delta,1);
 			}  else 
 			if (c.x - o.x > 0 && c.y == 1 && o.y == 1)	{
-				setGroup(2,0.01,1);
+				setGroup(2,delta,1);
 			} 
 			if (c.y - o.y > 0 && c.x == 1 && o.x == 1)	{
-				setGroup(1,-0.01,1);
+				setGroup(1,-delta,1);
 			}  else 
 			if (c.x - o.x < 0 && c.y == 1 && o.y == 1)	{
-				setGroup(2,-0.01,1);
+				setGroup(2,-delta,1);
 			} 
 
 			if (c.y - o.y < 0 && c.x == -1 && o.x == -1)	{
-				setGroup(1,0.01,-1);
+				setGroup(1,delta,-1);
 			}  else 
 			if (c.x - o.x > 0 && c.y == -1 && o.y == -1)	{
-				setGroup(2,0.01,-1);
+				setGroup(2,delta,-1);
 			} 
 			if (c.y - o.y > 0 && c.x == -1 && o.x == -1)	{
-				setGroup(1,-0.01,-1);
+				setGroup(1,-delta,-1);
 			}  else 
 			if (c.x - o.x < 0 && c.y == -1 && o.y == -1)	{
-				setGroup(2,-0.01,-1);
+				setGroup(2,-delta,-1);
 			} 
 		}
 	}
 }
  
-function checkThirdPlane(c,o) {
+function checkThirdPlane(c,o,delta) {
 	if (c.x == -1 && o.x == -1 && c.normal.x == -1 ) {
 				
 		if ((c.g == 1 && o.g == 2 ) || c.g == 2 && o.g == 1) {
 			if (c.y - o.y < 0 && c.z == 0 && o.z == 0)	{
-				setGroup(3,0.01,0);
+				setGroup(3,delta,0);
 			}  else 
 			if (c.z - o.z > 0 && c.y == 0 && o.y == 0)	{
-				setGroup(2,0.01,0);
+				setGroup(2,delta,0);
 			} 
 			if (c.y - o.y > 0 && c.z == 0 && o.z == 0)	{
-				setGroup(3,-0.01,0);
+				setGroup(3,-delta,0);
 			}  else 
 			if (c.z - o.z < 0 && c.y == 0 && o.y == 0)	{
-				setGroup(2,-0.01,0);
+				setGroup(2,-delta,0);
 			} 
 		}
 
 		if ((c.g == 2 && o.g == 3 ) || c.g == 3 && o.g == 2) {
 			if (c.y - o.y < 0 && c.z == 1 && o.z == 1)	{
-				setGroup(3,0.01,1);
+				setGroup(3,delta,1);
 			}  else 
 			if (c.z - o.z > 0 && c.y == 1 && o.y == 1)	{
-				setGroup(2,0.01,1);
+				setGroup(2,delta,1);
 			} 
 			if (c.y - o.y > 0 && c.z == 1 && o.z == 1)	{
-				setGroup(3,-0.01,1);
+				setGroup(3,-delta,1);
 			}  else 
 			if (c.z - o.z < 0 && c.y == 1 && o.y == 1)	{
-				setGroup(2,-0.01,1);
+				setGroup(2,-delta,1);
 			} 
 
 			if (c.y - o.y < 0 && c.z == -1 && o.z == -1)	{
-				setGroup(3,0.01,-1);
+				setGroup(3,delta,-1);
 			}  else 
 			if (c.z - o.z > 0 && c.y == -1 && o.y == -1)	{
-				setGroup(2,0.01,-1);
+				setGroup(2,delta,-1);
 			} 
 			if (c.y - o.y > 0 && c.z == -1 && o.z == -1)	{
-				setGroup(3,-0.01,-1);
+				setGroup(3,-delta,-1);
 			}  else 
 			if (c.z - o.z < 0 && c.y == -1 && o.y == -1)	{
-				setGroup(2,-0.01,-1);
+				setGroup(2,-delta,-1);
 			} 
 		}
 	}
 }
 
-function checkFourthPlane(c,o) {
+function checkFourthPlane(c,o,delta) {
 	if (c.z == -1 && o.z == -1 && c.normal.z == -1 ) {
 				
 		if ((c.g == 1 && o.g == 2 ) || c.g == 2 && o.g == 1) {
 			if (c.y - o.y < 0 && c.x == 0 && o.x == 0)	{
-				setGroup(1,-0.01,0);
+				setGroup(1,-delta,0);
 			}  else 
 			if (c.x - o.x > 0 && c.y == 0 && o.y == 0)	{
-				setGroup(2,-0.01,0);
+				setGroup(2,-delta,0);
 			} 
 			if (c.y - o.y > 0 && c.x == 0 && o.x == 0)	{
-				setGroup(1,0.01,0);
+				setGroup(1,delta,0);
 			}  else 
 			if (c.x - o.x < 0 && c.y == 0 && o.y == 0)	{
-				setGroup(2,0.01,0);
+				setGroup(2,delta,0);
 			} 
 		}
 
 		if ((c.g == 2 && o.g == 3 ) || c.g == 3 && o.g == 2) {
 			if (c.y - o.y < 0 && c.x == 1 && o.x == 1)	{
-				setGroup(1,-0.01,1);
+				setGroup(1,-delta,1);
 			}  else 
 			if (c.x - o.x > 0 && c.y == 1 && o.y == 1)	{
-				setGroup(2,-0.01,1);
+				setGroup(2,-delta,1);
 			} 
 			if (c.y - o.y > 0 && c.x == 1 && o.x == 1)	{
-				setGroup(1,0.01,1);
+				setGroup(1,delta,1);
 			}  else 
 			if (c.x - o.x < 0 && c.y == 1 && o.y == 1)	{
-				setGroup(2,0.01,1);
+				setGroup(2,delta,1);
 			} 
 
 			if (c.y - o.y < 0 && c.x == -1 && o.x == -1)	{
-				setGroup(1,-0.01,-1);
+				setGroup(1,-delta,-1);
 			}  else 
 			if (c.x - o.x > 0 && c.y == -1 && o.y == -1)	{
-				setGroup(2,-0.01,-1);
+				setGroup(2,-delta,-1);
 			} 
 			if (c.y - o.y > 0 && c.x == -1 && o.x == -1)	{
-				setGroup(1,0.01,-1);
+				setGroup(1,delta,-1);
 			}  else 
 			if (c.x - o.x < 0 && c.y == -1 && o.y == -1)	{
-				setGroup(2,0.01,-1);
+				setGroup(2,delta,-1);
 			} 
 		}
 	}
 }
  
-function checkFivethPlane(c,o) {
+function checkFivethPlane(c,o,delta) {
 	if (c.y == 1 && o.y == 1 && c.normal.y == 1 ) {
 				
 		if ((c.g == 1 && o.g == 2 ) || c.g == 2 && o.g == 1) {
 			if (c.z - o.z < 0 && c.x == 0 && o.x == 0)	{
-				setGroup(1,-0.01,0);
+				setGroup(1,-delta,0);
 			}  else 
 			if (c.x - o.x > 0 && c.z == 0 && o.z == 0)	{
-				setGroup(3,-0.01,0);
+				setGroup(3,-delta,0);
 			} 
 			if (c.z - o.z > 0 && c.x == 0 && o.x == 0)	{
-				setGroup(1,0.01,0);
+				setGroup(1,delta,0);
 			}  else 
 			if (c.x - o.x < 0 && c.z == 0 && o.z == 0)	{
-				setGroup(3,0.01,0);
+				setGroup(3,delta,0);
 			} 
 		}
 
 		if ((c.g == 2 && o.g == 3 ) || c.g == 3 && o.g == 2) {
 			if (c.z - o.z < 0 && c.x == 1 && o.x == 1)	{
-				setGroup(1,-0.01,1);
+				setGroup(1,-delta,1);
 			}  else 
 			if (c.x - o.x > 0 && c.z == 1 && o.z == 1)	{
-				setGroup(3,-0.01,1);
+				setGroup(3,-delta,1);
 			} 
 			if (c.z - o.z > 0 && c.x == 1 && o.x == 1)	{
-				setGroup(1,0.01,1);
+				setGroup(1,delta,1);
 			}  else 
 			if (c.x - o.x < 0 && c.z == 1 && o.z == 1)	{
-				setGroup(3,0.01,1);
+				setGroup(3,delta,1);
 			} 
 
 			if (c.z - o.z < 0 && c.x == -1 && o.x == -1)	{
-				setGroup(1,-0.01,-1);
+				setGroup(1,-delta,-1);
 			}  else 
 			if (c.x - o.x > 0 && c.z == -1 && o.z == -1)	{
-				setGroup(3,-0.01,-1);
+				setGroup(3,-delta,-1);
 			} 
 			if (c.z - o.z > 0 && c.x == -1 && o.x == -1)	{
-				setGroup(1,0.01,-1);
+				setGroup(1,delta,-1);
 			}  else 
 			if (c.x - o.x < 0 && c.z == -1 && o.z == -1)	{
-				setGroup(3,0.01,-1);
+				setGroup(3,delta,-1);
 			} 
 		}
 	}
 }
  
-function checkSixthPlane(c,o) {
+function checkSixthPlane(c,o,delta) {
 	if (c.y == -1 && o.y == -1 && c.normal.y == -1 ) {
 				
 		if ((c.g == 1 && o.g == 2 ) || c.g == 2 && o.g == 1) {
 			if (c.z - o.z < 0 && c.x == 0 && o.x == 0)	{
-				setGroup(1,0.01,0);
+				setGroup(1,delta,0);
 			}  else 
 			if (c.x - o.x > 0 && c.z == 0 && o.z == 0)	{
-				setGroup(3,0.01,0);
+				setGroup(3,delta,0);
 			} 
 			if (c.z - o.z > 0 && c.x == 0 && o.x == 0)	{
-				setGroup(1,-0.01,0);
+				setGroup(1,-delta,0);
 			}  else 
 			if (c.x - o.x < 0 && c.z == 0 && o.z == 0)	{
-				setGroup(3,-0.01,0);
+				setGroup(3,-delta,0);
 			} 
 		}
 
 		if ((c.g == 2 && o.g == 3 ) || c.g == 3 && o.g == 2) {
 			if (c.z - o.z < 0 && c.x == 1 && o.x == 1)	{
-				setGroup(1,0.01,1);
+				setGroup(1,delta,1);
 			}  else 
 			if (c.x - o.x > 0 && c.z == 1 && o.z == 1)	{
-				setGroup(3,0.01,1);
+				setGroup(3,delta,1);
 			} 
 			if (c.z - o.z > 0 && c.x == 1 && o.x == 1)	{
-				setGroup(1,-0.01,1);
+				setGroup(1,-delta,1);
 			}  else 
 			if (c.x - o.x < 0 && c.z == 1 && o.z == 1)	{
-				setGroup(3,-0.01,1);
+				setGroup(3,-delta,1);
 			} 
 
 			if (c.z - o.z < 0 && c.x == -1 && o.x == -1)	{
-				setGroup(1,0.01,-1);
+				setGroup(1,delta,-1);
 			}  else 
 			if (c.x - o.x > 0 && c.z == -1 && o.z == -1)	{
-				setGroup(3,0.01,-1);
+				setGroup(3,delta,-1);
 			} 
 			if (c.z - o.z > 0 && c.x == -1 && o.x == -1)	{
-				setGroup(1,-0.01,-1);
+				setGroup(1,-delta,-1);
 			}  else 
 			if (c.x - o.x < 0 && c.z == -1 && o.z == -1)	{
-				setGroup(3,-0.01,-1);
+				setGroup(3,-delta,-1);
 			} 
 		}
 	}
@@ -1287,45 +1288,45 @@ function rotator() {
   }
  
   
-  if ((Math.trunc(rx * 100) == -1 * 157) /*&& !(Math.trunc(rx * 100) == oldRot.xx)*/) {
+  if ((Math.trunc(rx * 10) == -1 * 15) /*&& !(Math.trunc(rx * 10) == oldRot.xx)*/) {
 			
-	if (Math.trunc(rx * 100) == -1 * 157)	lesson10.group.rotation.x = -1 * 1.57;  
-	oldRot.x = Math.trunc(lesson10.group.rotation.x * 100);
+	if (Math.trunc(rx * 10) == -1 * 15)	lesson10.group.rotation.x = -1 * 1.57;  
+	oldRot.x = Math.trunc(lesson10.group.rotation.x * 10);
 	rotate = false;
   }
   
-  if ((Math.trunc(rx * 100) == 1 * 157) /*&& !(Math.trunc(rx * 100) == oldRot.x)*/) {
+  if ((Math.trunc(rx * 10) == 1 * 15) /*&& !(Math.trunc(rx * 10) == oldRot.x)*/) {
 			
-	if (Math.trunc(rx * 100) == 1 * 157)	lesson10.group.rotation.x = 1 * 1.57;  
-	oldRot.x = Math.trunc(lesson10.group.rotation.x * 100);	
+	if (Math.trunc(rx * 10) == 1 * 15)	lesson10.group.rotation.x = 1 * 1.57;  
+	oldRot.x = Math.trunc(lesson10.group.rotation.x * 10);	
 	rotate = false;
   }
 
-if ((Math.trunc(ry * 100) == -1 * 157) /*&& !(Math.trunc(ry * 100) == oldRot.y)*/) {
+if ((Math.trunc(ry * 10) == -1 * 15) /*&& !(Math.trunc(ry * 10) == oldRot.y)*/) {
 			
-	if (Math.trunc(ry * 100) == -1 * 157)	lesson10.group.rotation.y = -1 * 1.57;  
-	oldRot.y = Math.trunc(lesson10.group.rotation.y * 100);
+	if (Math.trunc(ry * 10) == -1 * 15)	lesson10.group.rotation.y = -1 * 1.57;  
+	oldRot.y = Math.trunc(lesson10.group.rotation.y * 10);
 	rotate = false;
   }
   
-  if ((Math.trunc(ry * 100) == 1 * 157) /*&& !(Math.trunc(ry * 100) == oldRot.y)*/) {
+  if ((Math.trunc(ry * 10) == 1 * 15) /*&& !(Math.trunc(ry * 10) == oldRot.y)*/) {
 			
-	if (Math.trunc(ry * 100) == 1 * 157) lesson10.group.rotation.y = 1 * 1.57;  
-	oldRot.y = Math.trunc(lesson10.group.rotation.y * 100);	
+	if (Math.trunc(ry * 10) == 1 * 15) lesson10.group.rotation.y = 1 * 1.57;  
+	oldRot.y = Math.trunc(lesson10.group.rotation.y * 10);	
 	rotate = false;
   }
 
-if ((Math.trunc(rz * 100) == -1 * 157) /*&& !(Math.trunc(rz * 100) == oldRot.z)*/) {
+if ((Math.trunc(rz * 10) == -1 * 15) /*&& !(Math.trunc(rz * 10) == oldRot.z)*/) {
 			
-	if (Math.trunc(rz * 100) == -1 * 157) lesson10.group.rotation.z = -1 * 1.57;  
-	oldRot.z = Math.trunc(lesson10.group.rotation.z * 100);
+	if (Math.trunc(rz * 10) == -1 * 15) lesson10.group.rotation.z = -1 * 1.57;  
+	oldRot.z = Math.trunc(lesson10.group.rotation.z * 10);
 	rotate = false;
   }
   
-  if ((Math.trunc(rz * 100) == 1 * 157) /*&& !(Math.trunc(rz * 100) == oldRot.z)*/) {
+  if ((Math.trunc(rz * 10) == 1 * 15) /*&& !(Math.trunc(rz * 10) == oldRot.z)*/) {
 			
-	if (Math.trunc(rz * 100) == 1 * 157) lesson10.group.rotation.z = 1 * 1.57;  
-	oldRot.z = Math.trunc(lesson10.group.rotation.z * 100);	
+	if (Math.trunc(rz * 10) == 1 * 15) lesson10.group.rotation.z = 1 * 1.57;  
+	oldRot.z = Math.trunc(lesson10.group.rotation.z * 10);	
 	rotate = false;
   }
 
