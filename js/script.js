@@ -1,3 +1,11 @@
+// For test
+
+var TactForTest = 0;
+var TestIndex = 0;
+
+
+// The puzzle code
+
 sbVertexShader = [
 "varying vec3 vWorldPosition;",
 "void main() {",
@@ -65,7 +73,8 @@ const ModeStatusEnum = {
 	TurnRoundFourThreeColorBlockThirdLayer:27,
 	MovePerTemplateThreeColorBlockThirdLayer:28,
 	TurnRoundPerTemplateThreeColorBlockThirdLayer:29,
-	RecaliblrateCrossForThirdLayer:30
+	RecaliblrateCrossForThirdLayer:30,
+	ForTest:31
 };
 
 var CrossStatus = CrossStatusEnum.CrossIsNotComplited;
@@ -78,7 +87,9 @@ var ModeStatus = ModeStatusEnum.Idle;
 var MoveTemplate;
 var TryCounter = 0;
 var AnchorIsShift = false;
-
+var Revers = true;
+var Break = false;
+var Tact = 0;
 
 var DecisionMatrixForThreeColorFirstLayer = new Map([
 
@@ -189,8 +200,8 @@ var DecisionMatrixForTwoColorSecondLayer = new Map([
 
 	// Revers position
 	['k0k3k5c2c3c3t1t1', [4,-1,4,1,4,7,-4,-7]],
-	['k3k0k5c1c2c3t1t1', [4,4,-1,4,1,4,7,-4,-7]],
-	['k0k3k5c2c1c3t1t1', [-4,-1,4,1,4,7,-4,-7]],
+	['k3k0k5c1c2c3t1t1', [-4,-1,4,1,4,7,-4,-7]],
+	['k0k3k5c2c1c3t1t1', [4,4,-1,4,1,4,7,-4,-7]],
 	['k3k0k5c3c2c3t1t1', [-1,4,1,4,7,-4,-7]]
 
 	
@@ -239,6 +250,8 @@ var DecisionMatrixForThreeColorThirdLayer = new Map([
 	['tb362', ['g0']],
 	['tb263', ['g1']],
 	['tb623', ['g1']],
+	['tb236', ['g1']],
+
 	['tb426', ['g2']],
 	['tb246', ['g2']],	
 
@@ -252,50 +265,11 @@ var DecisionMatrixForThreeColorThirdLayer = new Map([
 
 ]);
 
-var Break = false;
-var Tact = 0;
-
-var SingleColorBlocks = [
-	[1,2,2],
-    [1,2,3],
-	[2,1,2],
-	[2,2,1],
-    [2,2,3],
-	[3,2,2]
-];
-
-var TwoColorBlocks = [
-	[2,1,1],
-    [1,2,1],
-    [3,2,1],
-    [2,3,1],
-    [2,1,2],
-    [1,2,2],
-    [3,2,2],
-    [2,3,2],
-    [2,1,3],
-    [1,2,3],
-    [3,2,3],
-    [2,3,3]
-];
-
-var ThreeColorBlocks = [
-	[1,1,1],
-	[1,3,1],
-	[3,1,1],
-	[3,3,1],
-	[1,1,3],
-	[1,3,3],
-	[3,1,3],
-	[3,3,3]
-];
-
 var MoveToCode = [
 	[ 1,2,3],
 	[ 4,5,6],
 	[ 7,8,9]
 ];	
-
 
 class Block
 {
@@ -789,7 +763,6 @@ class CubeMatrix
 		}
 }
 
-
 var mouse = new THREE.Vector2();
 var axis;
 var rad;
@@ -887,10 +860,10 @@ var puzzle = {
     var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 1, FAR = 1000;
     this.camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
     this.scene.add(this.camera);
-    this.camera.position.set(100, 45, 90);
-	//this.camera.position.set(90, -85, 90);
+    this.camera.position.set(90, 95, 90);
+	
     this.camera.lookAt(new THREE.Vector3(0,0,0));
-
+    
     // Prepare webgl renderer
     this.renderer = new THREE.WebGLRenderer({ antialias:true });
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -910,6 +883,7 @@ var puzzle = {
     this.controls = new THREE.OrbitControls(this.camera);
     this.controls.target = new THREE.Vector3(0, 0, 0);
     this.controls.maxDistance = 8;
+	
 	//this.controls.maxDistance = 4;
 
 
@@ -924,7 +898,7 @@ var puzzle = {
     this.stats.domElement.style.zIndex = 1;
     this.container.appendChild( this.stats.domElement );
 	
-	// Prepare stats
+	// Prepare info pane
     this.cube_panel = new RubicPanel();
     this.cube_panel.domElement.style.position = 'absolute';
     this.cube_panel.domElement.style.left = '20px';
@@ -949,24 +923,7 @@ var puzzle = {
    	
 	this.scene.add(this.group);
 	
-	arrowHelper1cube = new THREE.ArrowHelper( new THREE.Vector3(1,0,0), new THREE.Vector3( 0, 0, 0 ), 3, 0xf00000 );
-	this.scene.add( arrowHelper1cube );
-  
-    arrowHelper2cube = new THREE.ArrowHelper( new THREE.Vector3(0,1,0), new THREE.Vector3( 0, 0, 0 ), 3, 0xffffff );
-	this.scene.add( arrowHelper2cube );
-        
-    arrowHelper3cube = new THREE.ArrowHelper( new THREE.Vector3(0,0,1), new THREE.Vector3( 0, 0, 0 ), 3, 0x00ff00 );
-	this.scene.add( arrowHelper3cube );
 	
-	
-	arrowHelper1con = new THREE.ArrowHelper( new THREE.Vector3(0,0,-1), new THREE.Vector3( 0, 0, 0 ), 4, 0xf000ff);
-	this.scene.add( arrowHelper1con );
-  
-    arrowHelper2con = new THREE.ArrowHelper( new THREE.Vector3(0,1,0), new THREE.Vector3( 0, 0, 0 ), 4, 0xffff00 );
-	this.scene.add( arrowHelper2con );
-        
-    arrowHelper3con = new THREE.ArrowHelper( new THREE.Vector3(0,0,1), new THREE.Vector3( 0, 0, 0 ), 4, 0x00ffff );
-	this.scene.add( arrowHelper3con );
 	
 {
 var g1 = new THREE.BoxGeometry(1, 1, 1, 1, 1, 1);
@@ -1578,11 +1535,16 @@ function animate() {
   requestAnimationFrame(animate);
   render();
   update();
+
+  testing(); 
+  
   rotator();
+  
 }
 
 // Update controls and stats
 function update() {
+  if (rotate) return;
   var clock_delta = puzzle.clock.getDelta();
 
   puzzle.controls.update(clock_delta);
@@ -1620,10 +1582,7 @@ function update() {
 	if (result == 69) move(3,-1,1);
 	if (result == 95) move(3,-1,-1);	
 	
-	if (rotate) HistoryRecord.push(result);
-
-   
-    
+	//if (rotate) HistoryRecord.push(result);
   }
  
   if (!rotate && IsPlay) {
@@ -1631,7 +1590,6 @@ function update() {
 		 convertCodeToMove(Record[line]);
 		 line--;
 	 } else {
-		//Record = []; 
 		IsPlay = false;
 	 }
 	 
@@ -2181,6 +2139,7 @@ function checkSixthPlane(c,o,delta) {
 }
  
 function setGroup(selector, delta, position) {
+	if (rotate) return;
 	let sgn = (delta < 0 )?-1:1;
 	if (!IsPlay) Record.push(convertMoveToCode(selector,position,sgn));
 	ungroup();
@@ -2220,7 +2179,7 @@ function setGroup(selector, delta, position) {
 	rotate = true;
 }	
 
-function rotator() {
+function rotator() { 
   let rx = puzzle.group.rotation.x;
   let ry = puzzle.group.rotation.y; 
   let rz = puzzle.group.rotation.z;
@@ -2233,45 +2192,51 @@ function rotator() {
 	
   }
  
-  
-  if ((Math.trunc(rx * 10) == -1 * 15)) {
-			
-	if (Math.trunc(rx * 10) == -1 * 15)	puzzle.group.rotation.x = -1 * 1.57;  
+  let epsilon = 0.4;
+  let rx_rotate = Math.trunc(rx * 10);
+  let ry_rotate = Math.trunc(ry * 10);
+  let rz_rotate = Math.trunc(rz * 10);
+
+  let bound_rotate_1 = -1 * 15;
+  let bound_rotate_2 = 1 * 15;
+
+  if (rx_rotate > bound_rotate_1 - epsilon && rx_rotate < bound_rotate_1 + epsilon) {
+	puzzle.group.rotation.x = -1 * 1.57;  
 	oldRot.x = Math.trunc(puzzle.group.rotation.x * 10);
 	rotate = false;
   }
   
-  if ((Math.trunc(rx * 10) == 1 * 15)) {
+  if (rx_rotate > bound_rotate_2 - epsilon && rx_rotate < bound_rotate_2 + epsilon) {
 			
-	if (Math.trunc(rx * 10) == 1 * 15)	puzzle.group.rotation.x = 1 * 1.57;  
+	puzzle.group.rotation.x = 1 * 1.57;  
 	oldRot.x = Math.trunc(puzzle.group.rotation.x * 10);	
 	rotate = false;
   }
 
-  if ((Math.trunc(ry * 10) == -1 * 15)) {
+  if (ry_rotate > bound_rotate_1 - epsilon && ry_rotate < bound_rotate_1 + epsilon) {
 			
-	if (Math.trunc(ry * 10) == -1 * 15)	puzzle.group.rotation.y = -1 * 1.57;  
+	puzzle.group.rotation.y = -1 * 1.57;  
 	oldRot.y = Math.trunc(puzzle.group.rotation.y * 10);
 	rotate = false;
   }
   
-  if ((Math.trunc(ry * 10) == 1 * 15)) {
+  if (ry_rotate > bound_rotate_2 - epsilon && ry_rotate < bound_rotate_2 + epsilon) {
 			
-	if (Math.trunc(ry * 10) == 1 * 15) puzzle.group.rotation.y = 1 * 1.57;  
+	puzzle.group.rotation.y = 1 * 1.57;  
 	oldRot.y = Math.trunc(puzzle.group.rotation.y * 10);	
 	rotate = false;
   }
 
-  if ((Math.trunc(rz * 10) == -1 * 15)) {
+  if (rz_rotate > bound_rotate_1 - epsilon && rz_rotate < bound_rotate_1 + epsilon) {
 			
-	if (Math.trunc(rz * 10) == -1 * 15) puzzle.group.rotation.z = -1 * 1.57;  
+	puzzle.group.rotation.z = -1 * 1.57;  
 	oldRot.z = Math.trunc(puzzle.group.rotation.z * 10);
 	rotate = false;
   }
   
-  if ((Math.trunc(rz * 10) == 1 * 15)) {
+  if (rz_rotate > bound_rotate_2 - epsilon && rz_rotate < bound_rotate_2 + epsilon) {
 			
-	if (Math.trunc(rz * 10) == 1 * 15) puzzle.group.rotation.z = 1 * 1.57;  
+	puzzle.group.rotation.z = 1 * 1.57;  
 	oldRot.z = Math.trunc(puzzle.group.rotation.z * 10);	
 	rotate = false;
   }
@@ -2305,9 +2270,10 @@ function ungroup() {
             let rotation = new THREE.Euler()
             rotation.setFromQuaternion(quat)
 
-            gg.rotation.x = rotation.x ;
-            gg.rotation.y = rotation.y ;
-            gg.rotation.z = rotation.z ;
+            gg.rotation.x = Correction(rotation.x) ;
+            gg.rotation.y = Correction(rotation.y) ;
+            gg.rotation.z = Correction(rotation.z) ;
+
 			gg = null;
         };
 		
@@ -2318,6 +2284,26 @@ function ungroup() {
 			return;
 		}
 		
+}
+
+function Correction(val) {
+	let out = 0;
+	let epsilon = .1;
+
+	if (( 0 - epsilon) < val && val < (0 + epsilon)) {
+		out = 0;
+	} else if (( 1.57 - epsilon) < val && val < (1.57 + epsilon)) {
+		out = 1.57;
+	} else if (( 3.14 - epsilon) < val && val < (3.14 + epsilon)) {
+		out = 3.14;
+	} else if (( -1.57 - epsilon) < val && val < (-1.57 + epsilon)) {
+		out = -1.57;
+	} else if (( -3.14 - epsilon) < val && val < (-3.14 + epsilon)) {
+		out = -3.14;
+	} else { 
+		return val;
+	}
+	return out;
 }
 
 function getType(inp) {
@@ -2383,13 +2369,7 @@ function getCurrCoords() {
 	
   }
   
-  arrowHelper1cube.setDirection(v1);
-  arrowHelper2cube.setDirection(v2);
-  arrowHelper3cube.setDirection(v3);
-  
-  arrowHelper1con.setDirection(v1c)
-  arrowHelper2con.setDirection(v2c);
-  arrowHelper3con.setDirection(v3c);
+ 
   
 }
 
@@ -2443,6 +2423,7 @@ function setDirectForModel(m) {
 }
 
 function move(s,p,sgn) {
+	if (rotate) return;
 	let delta = sgn * 0.1;
 
 	if (s == 1 && p == -1 && sgn == 1) {
@@ -2810,14 +2791,49 @@ function Play() {
 }
 
 function Clear() {
+	console.clear();
 	Record = [];
 }
 
 function Print() {
+	console.clear();
 	console.log("[" + Record + "]");
 	console.log( Record + "]");
 	console.log("[" + Record);
 }
+
+function GetBack() {
+	let VIEW_ANGLE;
+
+	if (Revers) {
+		Revers = false;
+		VIEW_ANGLE = -45; 
+	} else {
+		Revers = true;
+		VIEW_ANGLE = 45; 
+	}
+	
+
+	puzzle.scene.remove(puzzle.controls);
+	puzzle.scene.remove(puzzle.camera);
+
+	let SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
+	let ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 1, FAR = 1000;
+    puzzle.camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+    puzzle.scene.add(puzzle.camera);
+	
+	if (Revers) {
+		puzzle.camera.position.set(90, 95, 90);
+	} else {
+		puzzle.camera.position.set(90, -95, 90);
+	}
+	
+    puzzle.camera.lookAt(new THREE.Vector3(0,0,0));
+	puzzle.controls = new THREE.OrbitControls(puzzle.camera);
+    puzzle.controls.target = new THREE.Vector3(0, 0, 0);
+    puzzle.controls.maxDistance = 8;
+}
+
 
 //The assembling code
 
@@ -2827,6 +2843,11 @@ function AssemblingCube(mtx) {
 		case ModeStatusEnum.Idle:
 			break;
 		case ModeStatusEnum.InitFindMainBlockFirstLayer:
+			CrossStatus = CrossStatusEnum.CrossIsNotComplited;
+			ThreeColorBlockThirdLayerStatus = ThreeColorBlockThirdLayerStatusEnum.BlockIsNotComplited;
+			TryCounter = 0;
+			Tact = 0;
+			TargetIndex = 0;
 			InitFindMainBlockFirstLayer();
 			break;
 		case ModeStatusEnum.FindMainBlockFirstLayer:
@@ -2889,7 +2910,6 @@ function AssemblingCube(mtx) {
 		case ModeStatusEnum.MovePerTemplateTwoColorBlockThirdLayer:
 			MovePerTemplate(MoveTemplate,ModeStatusEnum.FindFourTwoColorBlockThirdLayer,mtx);
 			break;
-	
 		case ModeStatusEnum.InitFourThreeColorBlockThirdLayer:
 			InitFourThreeColorBlockThirdLayer();
 			break;
@@ -2914,7 +2934,9 @@ function AssemblingCube(mtx) {
 		case ModeStatusEnum.RecaliblrateCrossForThirdLayer:
 			RecaliblrateCrossForThirdLayer(mtx);
 			break;	
-					
+		case ModeStatusEnum.ForTest:
+			MovePerTemplate(MoveTemplate,ModeStatusEnum.InitFindMainBlockFirstLayer,mtx);
+			break;			
 	}
 }
 
@@ -3073,7 +3095,7 @@ function AtLeastTwoBlocksIsInPlace(mtx) {
 		}
 	}
 
-	if (CounterBlocks > 1) return true; else return false;
+	if (CounterBlocks > 0) return true; else return false;
 	
 }
 
@@ -3083,32 +3105,13 @@ function MovePerTemplate(tmp,mode,mtx) {
 		let a = 0;
 	}
 
-	if (tmp == undefined) {
-		ModeStatus = ModeStatusEnum.FindFourTwoColorBlockSecondLayer;
-		return;
-	}
-
 	if (Tact < tmp.length) {
 		convertCodeToMove(MoveTemplate[Tact],false);
 		Tact++; 
 	} else {
 		ModeStatus = mode;
 	}
-	/*
-	CurrentBlock = FindBlock(TargetBlock,mtx);
-
-	if (
-		CurrentBlock.b[1] == TargetBlock.b[1] &&
-		CurrentBlock.b[2] == TargetBlock.b[2] &&
-		CurrentBlock.b[3] == TargetBlock.b[3] &&
-		CurrentBlock.b[4] == TargetBlock.b[4] &&
-		CurrentBlock.b[5] == TargetBlock.b[5] &&
-		CurrentBlock.b[6] == TargetBlock.b[6] ) 
-	{
-		Tact = 0;
-		ModeStatus = mode;
-	}
-	*/
+	
 }
 
 function SetMove(tmp,mode) {
@@ -3146,9 +3149,9 @@ function UnitInPlace(block,mtx){
 	if (include == 3) return true; else return false;
 }
 
-function Iterator(dlt = 1, rng = 3) {
+function Iterator(dlt = 1, rng = 4) {
 	let res = TargetIndex + dlt;
-	if (res > rng) res = res % rng
+	if (res >= rng) res = res % rng
 	if (res < 0) res = Math.abs(res % rng);
 	TargetIndex = res;
 }
@@ -3472,8 +3475,6 @@ function MoveFourTwoColorBlockFirstLayer() {
 		
 		ModeStatus = ModeStatusEnum.FindFourTwoColorBlockFirstLayer;
 	} 
-	
-	
 }
 
 function RecaliblrateCrossForFirstLayer(mtx) {
@@ -3662,8 +3663,8 @@ function FindFourTwoColorBlockThirdLayer(mtx) {
 		case CrossStatusEnum.CrossIsSetup:
 			ModeStatus = ModeStatusEnum.TurnRoundFourTwoColorBlockThirdLayer;
 			break;
-		case CrossStatusEnum.CrossComplited:
-			ModeStatus = ModeStatusEnum.Idle;
+		case CrossStatusEnum.CrossIsComplited:
+			ModeStatus = ModeStatusEnum.InitFourThreeColorBlockThirdLayer;
 			break;	
 	}
 	
@@ -3720,8 +3721,6 @@ function TurnRoundFourTwoColorBlockThirdLayer(mtx) {
 		//ModeStatus = ModeStatusEnum.Idle;
 		return;
 	}
-	
-
 
 	if (DecisionMatrixForTwoColorThirdLayer.get(key) != undefined ) 
 	{
@@ -3730,7 +3729,6 @@ function TurnRoundFourTwoColorBlockThirdLayer(mtx) {
 	} else {
 		SetMove([7,-5,7,-5,7,-5,7,-5],ModeStatusEnum.MovePerTemplateTwoColorBlockThirdLayer);
 	}
-	
 }
 
 //phase 2
@@ -3755,10 +3753,6 @@ function MoveFourThreeColorBlockThirdLayer(mtx) {
 
 	let Status = GetThreeColorBlockThirdLayerStatus(mtx);
 	let key = "rc" + CurrentBlock.b[4] + CurrentBlock.b[5];	
-	if (Status == ThreeColorBlockThirdLayerStatusEnum.BlockIsSetup) {
-		ModeStatus = ModeStatusEnum.TurnRoundFourThreeColorBlockThirdLayer;
-		return;
-	}  
 	
 	if (TryCounter < 4) {
 		SetMove(DecisionMatrixForThreeColorThirdLayer.get(key),ModeStatus = ModeStatusEnum.MovePerTemplateThreeColorBlockThirdLayer);
@@ -3767,6 +3761,17 @@ function MoveFourThreeColorBlockThirdLayer(mtx) {
 	} else {
 		TryCounter = 0;
 	}
+	
+	if (Status == ThreeColorBlockThirdLayerStatusEnum.BlockIsSetup) {
+		if (AnchorIsShift) {
+			ModeStatus = ModeStatusEnum.RecaliblrateCrossForThirdLayer;	
+		} else {
+			ModeStatus = ModeStatusEnum.TurnRoundFourThreeColorBlockThirdLayer;
+		}
+		return;
+	}  
+	
+	
 
 	if (AtLeastTwoBlocksIsInPlace(mtx)) {
 		if (AnchorIsShift) {
@@ -3775,28 +3780,29 @@ function MoveFourThreeColorBlockThirdLayer(mtx) {
 			ModeStatus = ModeStatusEnum.RecaliblrateCrossForThirdLayer;
 			return;
 		}
-
 	}
 	
 }
 
 function FindAnchorThirdLayer(mtx){
 	CurrentBlock = GetBlockByListTarget(TargetIndex,mtx);
+	
 	if (UnitInPlace(CurrentBlock,mtx)) {
-		Iterator(1);
 		ModeStatus = ModeStatusEnum.MoveFourThreeColorBlockThirdLayer;
 		TryCounter = 0; 
 	} else {
-		Iterator(1);
 		if (TryCounter > 3) {
 			convertCodeToMove(4,false);
 			AnchorIsShift = true;
 			TryCounter = 0; 
+			return;
 		} else {
 			TryCounter++;
 		}
 		ModeStatus = ModeStatusEnum.FindAnchorThirdLayer;
 	}
+
+	Iterator(1);
 }
 
 function TurnRoundFourThreeColorBlockThirdLayer(mtx) {
@@ -3827,10 +3833,56 @@ function RecaliblrateCrossForThirdLayer(mtx) {
 		mtx[1][2][3].b[2] == 0 &&
 		mtx[1][2][3].b[3] == 2 
 	) {
+		TargetIndex = 0;
 		ModeStatus = ModeStatusEnum.FindAnchorThirdLayer;
 	} else {
 		convertCodeToMove(4,false);
 		ModeStatus = ModeStatusEnum.RecaliblrateCrossForThirdLayer;
 	}
 }
+
+// TEST TEST TEST TEST TEST TEST
+
+function TEST(){
+	if (ModeStatus != ModeStatusEnum.Idle) return;
+
+	TestIndex = 7;
+}
+
+function testing() {
+	if (rotate) return;
+	switch (TestIndex) {
+		case 1:
+			SetMove([4,2,3,1,4,2,3,1,4,2],ModeStatusEnum.ForTest);
+			TestIndex = 0;
+			break;
+		case 2:
+			SetMove([4,8],ModeStatusEnum.ForTest);
+			TestIndex = 0;
+			break;
+		case 3:
+			SetMove([-4,8,3,2],ModeStatusEnum.ForTest);
+			TestIndex = 0;
+			break;	
+	 
+			break;	
+		case 4:
+			SetMove([-4,-8,3,2],ModeStatusEnum.ForTest);
+			TestIndex = 0;
+			break;	
+		case 5:
+			SetMove([-6,1,4,2,-3,-5],ModeStatusEnum.ForTest);
+			TestIndex = 0;
+			break;	
+		case 6:
+			SetMove([-3,-3,3,-4,-4,9,-9,4,2,2,-5,-1,5,-1,3,5,8,-9,8,-9,-7,4,-4,-6,3,7,-7,3,-5,-7,-8,-9,-3,9,-6,1,-1,-3,1,-4,5,3,4],ModeStatusEnum.ForTest);
+			TestIndex = 0;
+			break;
+		case 7:
+			SetMove([-8,2,3,-6,9,-7,2,8,-6,-2,4,6,4,-4,-7,8,-4,9,6,5,-7,5,-1,7,9,-4,7,-6,-1,5,5,6,6,-8,4,-9,-3,3,-1,8,-7,9,4,9,-7,2,-1,-4,-9,-3,6,-7,5,2,1,9,7,-6,5,-9],ModeStatusEnum.ForTest);
+			TestIndex = 0;
+			break;				
+	} 
+}
+
 
