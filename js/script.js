@@ -879,6 +879,7 @@ var puzzle = {
     document.addEventListener('mousemove', this.onDocumentMouseMove, false);
     document.addEventListener('mouseup', this.onDocumentMouseUp, false);
 
+
     // Prepare Orbit controls
     this.controls = new THREE.OrbitControls(this.camera);
     this.controls.target = new THREE.Vector3(0, 0, 0);
@@ -2541,7 +2542,7 @@ var RubicPanel = function () {
 	var mode = 0;
 
 	var container = document.createElement( 'div' );
-	container.style.cssText = 'position:fixed;height:100px;top:0;left:100;cursor:pointer;opacity:0.9;z-index:10000';
+	container.style.cssText = 'position:fixed;height:100px;top:10px;left:100px;cursor:pointer;opacity:0.9;z-index:10000';
 	
 	container.addEventListener( 'click', function ( event ) {
 
@@ -2571,11 +2572,11 @@ var RubicPanel = function () {
 
 	
 
-	if ( self.performance && self.performance.memory ) {
+//	if ( self.performance && self.performance.memory ) {
 
 		var memPanel = addPanel( new RubicPanel.Panel( 'Cube layout', '#f08', '#201' ) );
 
-	}
+//	}
 
 	showPanel( 0 );
 
@@ -2731,6 +2732,7 @@ RubicPanel.Panel = function ( name, fg, bg ) {
 					"The cube has assembled!  "
 				, TEXT_X, TEXT_Y + 14 );
 				Record = [];
+				ModeStatus = ModeStatusEnum.Idle;
 			}
 		}
 
@@ -3676,10 +3678,15 @@ function MoveFourTwoColorBlockThirdLayer(mtx) {
 	let Status = GetCrossStatus(mtx);
 	
 	let key = "c" + CurrentBlock.b[4] + "c" + CurrentBlock.b[5] 
+
+	CrossStatus = Status;
+
 	
 	if (Status == CrossStatusEnum.CrossIsSetup) {
-		CrossStatus = CrossStatusEnum.CrossSetup;
 		ModeStatus = ModeStatusEnum.TurnRoundFourTwoColorBlockThirdLayer;
+		return;
+	} else if  (Status == CrossStatusEnum.CrossIsComplited) {
+		ModeStatus = ModeStatusEnum.InitFourThreeColorBlockFirstLayer;
 		return;
 	}
 
@@ -3807,6 +3814,7 @@ function FindAnchorThirdLayer(mtx){
 
 function TurnRoundFourThreeColorBlockThirdLayer(mtx) {
 	CurrentBlock =  GetBlockByListTarget(0,mtx); 
+	let CrossStatus = GetCrossStatus(mtx);
 	let key = "tb" + CurrentBlock.b[1] + CurrentBlock.b[2] + CurrentBlock.b[3];
 	let grp = DecisionMatrixForThreeColorThirdLayer.get(key);
 	let movies;
@@ -3814,7 +3822,11 @@ function TurnRoundFourThreeColorBlockThirdLayer(mtx) {
 	let Status = GetThreeColorBlockThirdLayerStatus(mtx);
 	
 	if (Status == ThreeColorBlockThirdLayerStatusEnum.BlockIsComplited) {
-		ModeStatus = ModeStatusEnum.Idle;
+		if (CrossStatus == CrossStatusEnum.CrossIsComplited) {
+			ModeStatus = ModeStatusEnum.Idle;
+			return;
+		}
+		ModeStatus = ModeStatusEnum.RecaliblrateCrossForThirdLayer;
 		return;
 	}  	
 
